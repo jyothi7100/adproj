@@ -71,7 +71,8 @@
     colorPalette: ['#3399FF', '#4d9084', '#A0A0A0'],
     dataLabel: {
       visible: true,
-      formatString: '#,##0'
+      formatString: '#,##0',
+      position: 'outside'
     }
     
   },
