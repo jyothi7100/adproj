@@ -77,7 +77,7 @@
     
   },
   valueAxis: {
-    visible: false,
+    visible: true,
     title: {
       visible: true
     },
@@ -91,11 +91,12 @@
       visible: true
     },
     label: {
-      visible: true
+      visible: true   
+        
     }
   },
   legend: {
-    visible: false
+    visible: true
   },
   title: {
     visible: false
