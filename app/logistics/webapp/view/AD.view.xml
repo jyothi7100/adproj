@@ -15,7 +15,7 @@
 
           
 <HBox >
-<Panel height= "500px" headerText=" Mode of Transport " class="sapUiSmallMarginBegin" width="500px">
+<Panel height= "500px" headerText=" Mode of Transport " class="sapUiSmallMarginBegin" width="350px">
          
 <viz:VizFrame
     id="idTransportModePie"
@@ -56,7 +56,7 @@
     </viz:feeds>
 </viz:VizFrame>
    </Panel> 
-    <Panel height= "500px" headerText="Status of Purchase Order" class="sapUiSmallMarginBegin" width="500px">
+    <Panel height= "500px" headerText="Status of Purchase Order" class="sapUiSmallMarginBegin" width="450px">
 <viz:VizFrame
     id="idVizFrame"
     vizType="bar"
@@ -125,9 +125,9 @@
 
 </viz:VizFrame>
 </Panel>
-</HBox>
 
-<Panel height="500px" headerText="Shipments by Department" class="sapUiSmallMarginBegin" width="500px">
+
+<Panel height="500px" headerText="Shipments by Department" class="sapUiSmallMarginBegin" width="400px">
   <viz:VizFrame
       id="idDeptChart"
       vizType="column"
@@ -140,7 +140,7 @@
         },
         categoryAxis: { title: { visible: true, text: 'Department' } },
         valueAxis: { title: { visible: true, text: 'Shipments' } },
-        legend: { visible: false },
+        legend: { visible: true },
         title: {
     visible: false
   }
@@ -165,7 +165,7 @@
   </viz:VizFrame>
 </Panel>
 
-
+</HBox>
 
 
       </VBox>
