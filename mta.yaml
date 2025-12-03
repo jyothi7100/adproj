@@ -1,0 +1,130 @@
+_schema-version: 3.3.0
+ID: ADproj
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: ADproj-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: ADproj-db
+  - name: uaa_ADproj
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+- name: ADproj-db-deployer
+  type: hdb
+  path: db
+  requires:
+  - name: ADproj-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: ADproj-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: ADproj-destination-service
+    parameters:
+      content-target: true
+  - name: ADproj_html_repo_host
+    parameters:
+      service-key:
+        name: ADproj_html_repo_host-key
+  - name: uaa_ADproj
+    parameters:
+      service-key:
+        name: uaa_ADproj-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: ManagedAppRouter_ADproj_html_repo_host
+          ServiceInstanceName: ADproj-html5-app-host-service
+          ServiceKeyName: ADproj_html_repo_host-key
+          sap.cloud.service: ManagedAppRouter
+        - Authentication: OAuth2UserTokenExchange
+          Name: ManagedAppRouter_uaa_ADproj
+          ServiceInstanceName: ADproj-xsuaa-service
+          ServiceKeyName: uaa_ADproj-key
+          sap.cloud.service: ManagedAppRouter
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: ADproj-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: ADproj_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - logistics.zip
+      name: logistics
+      target-path: resources/
+- name: logistics
+  type: html5
+  path: app/logistics
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: ADproj-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: ADproj-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: ADproj-destination-service
+    service-plan: lite
+- name: ADproj_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: ADproj-html5-app-host-service
+    service-plan: app-host
+- name: uaa_ADproj
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: ADproj-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: ADproj-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

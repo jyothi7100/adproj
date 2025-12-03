@@ -1,0 +1,117 @@
+<mvc:View controllerName="logistics.controller.ShipmentDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:suite="sap.suite.ui.commons"
+    displayBlock="true">
+
+  <Page id="shipmentdetailpage">
+
+
+<IconTabBar selectedKey="details" class="sapUiSmallMargin">
+  <items>
+    <IconTabFilter key="details" text="Details"
+  xmlns:sap.ui.layout.form="sap.ui.layout.form">
+
+  <VBox class="sapUiSmallMargin">
+    <items>
+      <ObjectHeader
+        title="Shipment: {ID}"
+         />
+        
+<Panel headerText="Shipment Overview" >
+  <HBox width="100%" renderType="Div" class="sapUiSmallMargin">
+
+    <!-- LEFT SIDE: Details, Seafreight, Emissions -->
+    <VBox width="50%" class="sapUiSmallMarginEnd">
+
+      <!-- Details -->
+      <Panel headerText="Details" >
+        <form:SimpleForm editable="false" layout="ResponsiveGridLayout">
+          <Text text="Entity:{Entity}" />
+          <Text text="Origin:{Origin}" />
+          <Text text="Destination:{Destination}" />
+          <Text text="Transport Mode:{TransportMode}" />
+          <Text text="Container Type:{ContainerType}" />
+          <Text text="Incoterms:{Incoterms}" />
+          <Text text="Shipment Date:{ShipmentDate}" />
+          <Text text="Estimated Delivery:{Estimateddelivery}" />
+        </form:SimpleForm>
+      </Panel>
+
+      <!-- Seafreight Specifics -->
+      <Panel headerText="Seafreight Specifics" >
+        <form:SimpleForm editable="false" layout="ResponsiveGridLayout">
+         <Text text="Vessel Name:{VesselName}" />
+          <Text text="Voyage Number:{VoyageNumber}" />
+          <Text text=" Waybill Number:{WaybillNumber}" />
+          <Text text="Port of Loading:{PortOfLoading}" />
+          <Text text="Port of Discharge:{PortOfDischarge}" />
+        </form:SimpleForm>
+      </Panel>
+
+      <!-- Emissions -->
+      <Panel headerText="Emissions" >
+        <form:SimpleForm editable="false" layout="ResponsiveGridLayout">
+          <Text text="Distance:{DistanceKM}" />
+         <Text text="Energy(MJ):{EnergyMJ}" />
+          <Text text="CO₂ (ton):{CO2Ton}" />
+          <Text text="NOx (kg):{NOxKG}" />
+          <Text text="SOx (kg):{SOxKG}" />
+          <Text text="NMHC (kg):{NMHC_KG}" />
+          <Text text="Particulate Matter (kg):{ParticulateKG}" />
+        </form:SimpleForm>
+      </Panel>
+
+    </VBox>
+
+    <!-- RIGHT SIDE: Routing Timeline -->
+    <VBox width="50%" class="sapUiSmallMarginBegin">
+      <Panel headerText="Routing Timeline" >
+        <suite:Timeline id="routingTimeline" enableScroll="false" showHeaderBar="false">
+          <suite:TimelineItem
+            title="Departed Origin"
+            text="{Origin}"
+            dateTime="{ShipmentDate}"
+            userName="Departed"
+            icon="sap-icon://begin" />
+
+          <suite:TimelineItem
+            title="Departed Port of Loading"
+            text="{PortOfLoading} | Vessel: {VesselName}, Voyage: {VoyageNumber}, Waybill: {WaybillNumber}"
+            dateTime="{ShipmentDate}"
+            userName="Departed"
+            icon="sap-icon://shipping-status" />
+
+          <suite:TimelineItem
+            title="Arrived Port of Discharge"
+            text="{PortOfDischarge}"
+            dateTime="{Estimateddelivery}"
+            userName="Arrived"
+            icon="sap-icon://complete" />
+        </suite:Timeline>
+      </Panel>
+    </VBox>
+
+  </HBox>
+</Panel>
+
+
+
+
+    </items>
+  </VBox>
+</IconTabFilter>
+
+
+    <IconTabFilter key="orders" text="Orders "  />
+    <IconTabFilter key="lines" text="Lines" />
+    <IconTabFilter key="packages" text="Packages"  />
+    <IconTabFilter key="images" text="Images"  />
+    <IconTabFilter key="documents" text="Documents" />
+  </items>
+</IconTabBar>
+</Page>
+</mvc:View>

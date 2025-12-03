@@ -1,0 +1,25 @@
+.boldText {
+  font-weight: bold;
+}
+
+.receivingDetailsContainer {
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.routingBox {
+  border: 1px solid rgb(37, 137, 82);
+  padding: 1rem;
+  border-radius: 6px;
+
+}
+
+.routingText {
+  color: rgb(30, 129, 61);
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+.bigEmoji {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}

@@ -1,0 +1,208 @@
+<mvc:View controllerName="logistics.controller.ReceivingDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:suite="sap.suite.ui.commons"
+    displayBlock="true">
+
+  <Page id="receivingDetailPage">
+   
+ <Panel headerText="Receiving Details" class="sapUiNoContentPadding sapUiNoMargin sapUiNoContentMargin">
+  <HBox  fitContainer="true"  class="sapUiSmallMarginBeginEnd">
+    <VBox class="sapUiSmallMarginEnd">
+      <Text text="Receiving Number: {ReceivingNumber}" class="sapUiSmallMarginTop sapMTextBold"/>
+    </VBox>
+    <VBox>
+    <Text text="Purchase Order:{parent/OrderNo}" class="sapUiSmallMarginTop sapMTextBold" />
+    </VBox>
+  </HBox>
+</Panel>
+
+
+
+    <IconTabBar id="receivingTabs" selectedKey="details">
+      <items>
+       <IconTabFilter key="details" text="Details">
+     <VBox class="receivingDetailsContainer">
+     
+     <HBox width="100%" class="sapUiSmallMargin">
+
+  <!-- LEFT PANEL: Reference Info -->
+  <VBox width="45%" class="sapUiSmallMarginEnd">
+
+    <Panel headerText="Details" class="sapUiNoContentPadding sapUiSmallMarginBottom">
+      <VBox class="sapUiSmallMargin">
+        <Text text="Entity: {= ${parent/Plant} + ' (' + ${parent/PlantCode} + ')' }" />
+        <Text text="Location: {Location}" />
+        <Text text="Supplier: {SupplierName}" />
+        <Text text="Description: {Description}" />
+        <Text text="Received: {ReceivedOn}" />
+        <Text text="Priority: {Priority}" />
+        <Text text="DGR: {= ${DGR} ? 'Yes' : 'No'}" />
+        <Text text="MR#: {MRNumber}" />
+        <Text text="Shipment#: {ShipmentNumber}" />
+        <Text text="Planned transport mode: {TransportMode}" />
+      </VBox>
+    </Panel>
+
+    <Panel headerText="Packed As" class="sapUiNoContentPadding sapUiSmallMarginBottom">
+      <VBox class="sapUiSmallMargin">
+        <Text text="Pieces: {Pieces}" />
+        <Text text="Weight: {Weight} kg" />
+        <Text text="Volume: {Volume} m³" />
+        <Text text="Value: {Value} USD" />
+      </VBox>
+    </Panel>
+
+    <Panel headerText="References" class="sapUiNoContentPadding">
+      <VBox class="sapUiSmallMargin">
+        <Text text="Entity: {parent/PlantCode}" />
+        <Text text="Destination: {parent/PlantLocation}" />
+        <Text text="Order type: {parent/OrderType}" />
+      </VBox>
+    </Panel>
+
+  </VBox>
+
+  <!-- RIGHT PANEL: Routing + Milestones -->
+  <VBox width="55%">
+
+    <Panel headerText="Routing" class="sapUiNoContentPadding sapUiSmallMarginBottom">
+      <HBox justifyContent="SpaceAround" alignItems="Center" class="routingBox">
+        <VBox alignItems="Center">
+          <core:Icon src="sap-icon://begin" color="green" size="2rem" />
+          <Text text="{ShippingFrom}" class="routingText" />
+          <Text text="Departed:" class="routingLabel" />
+          <Text text="{path: 'ReceivedOn', formatter: '.formatter.formatDate'}" class="routingDate" />
+        </VBox>
+        <VBox alignItems="Center">
+          <Text
+            text="{= ${TransportMode}.toLowerCase() === 'air freight' ? '✈️' :
+                         ${TransportMode}.toLowerCase() === 'sea freight' ? '🚢' :
+                         '❓' }"
+            class="sapUiTinyMarginEnd bigEmoji" />
+          <Text text="Shipment: {ShipmentNumber}" class="routingText" />
+        </VBox>
+        <VBox alignItems="Center">
+          <core:Icon src="sap-icon://home" color="green" size="2rem" />
+          <Text text="{Destination}" class="routingText" />
+          <Text text="Arrived:" class="routingLabel" />
+          <Text text="{path: 'ShippingDate', formatter: '.formatter.formatDate'}" class="routingDate" />
+        </VBox>
+      </HBox>
+    </Panel>
+
+    <Panel headerText="Milestones" class="sapUiNoContentPadding">
+      <suite:Timeline
+        id="milestoneTimeline"
+        content="{milestone>/Milestones}"
+        showIcons="true"
+        enableScroll="true"
+        showHeaderBar="false"
+        width="100%"
+        class="sapUiSmallMargin">
+
+        <suite:TimelineItem
+          title="{milestone>Title}"
+          text="{milestone>Location}"
+          dateTime="{milestone>DateTime}"
+          userName="System"
+          icon="{= ${milestone>Status} === 'Completed' ? 'sap-icon://accept' : 'sap-icon://pending' }" />
+      </suite:Timeline>
+    </Panel>
+
+  </VBox>
+
+</HBox>
+
+
+  </VBox>
+</IconTabFilter>
+
+        <IconTabFilter key="lines" text="Lines">
+          <VBox>
+            <Table
+    items="{path: 'Lines'}"
+    inset="false"
+    headerText="Receiving Line Items"
+    growing="true"
+    growingThreshold="10"
+    mode="None">
+
+    <columns>
+      <Column><Text text="Item" /></Column>
+      <Column><Text text="Quantity" /></Column>
+      <Column><Text text="Article" /></Column>
+    </columns>
+
+    <items>
+      <ColumnListItem>
+        <cells>
+          <Text text="{Item}" />
+          <Text text="{Quantity}" />
+          <Text text="{Article}" />
+        </cells>
+      </ColumnListItem>
+    </items>
+  </Table>
+          </VBox>
+        </IconTabFilter>
+
+        <IconTabFilter key="packages" text="Packages">
+          <VBox>
+            <Text text="Package info for Receiving {ReceivingNumber}" />
+          </VBox>
+        </IconTabFilter>
+
+        <IconTabFilter key="images" text="Images" >
+          <VBox>
+          <Table
+      id="ImagesTable"
+      inset="false"
+      items="{imageData>/images}"
+      width="100%">
+      
+      <columns>
+        <Column>
+          <Text text="Image" />
+        </Column>
+        <Column>
+          <Text text="Label" />
+        </Column>
+        <Column>
+          <Text text="Created" />
+        </Column>
+      </columns>
+
+      <items>
+        <ColumnListItem>
+          <Image
+            src="{imageData>imageSrc}"
+            width="120px"
+            height="100px"
+            decorative="false" />
+          <Text text="{imageData>albeNumber}" />
+          <Text text="{imageData>timestamp}" />
+        </ColumnListItem>
+      </items>
+    </Table>
+          </VBox>
+        </IconTabFilter>
+
+        <IconTabFilter key="osd" text="OS&amp;D's">
+          <VBox>
+            <Text text="Overages, Shortages &amp; Damages for Receiving {ReceivingNumber}" />
+          </VBox>
+        </IconTabFilter>
+
+        <IconTabFilter key="documents" text="Documents">
+          <VBox>
+            <Text text="Documents for Receiving {ReceivingNumber}" />
+          </VBox>
+        </IconTabFilter>
+      </items>
+    </IconTabBar>
+  </Page>
+</mvc:View>
